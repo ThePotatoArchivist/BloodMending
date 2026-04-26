@@ -33,6 +33,10 @@ public class BloodMending implements ModInitializer {
 			.minValue(0.0)
 			.buildAndRegister(id("min_experience_healing_factor"));
 
+	public static final GameRule<Double> EXPERIENCE_OVERKILL_BONUS_FACTOR = GameRuleBuilder.forDouble(0.5)
+			.minValue(0.0)
+			.buildAndRegister(id("experience_overkill_bonus_factor"));
+
 	public static final int MAX_ARMOR = 20;
 
 	public static float getExperienceHealingFactor(int armor, GameRules gameRules) {
