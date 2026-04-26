@@ -5,9 +5,13 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleBuilder;
 
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.gamerules.GameRule;
+import net.minecraft.world.level.gamerules.GameRules;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static net.minecraft.util.Mth.clamp;
+import static net.minecraft.util.Mth.lerp;
 
 public class BloodMending implements ModInitializer {
 	public static final String MOD_ID = "bloodmending";
@@ -21,9 +25,23 @@ public class BloodMending implements ModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	public static final GameRule<Double> EXPERIENCE_HEALING_FACTOR = GameRuleBuilder.forDouble(0.5)
+	public static final GameRule<Double> MAX_EXPERIENCE_HEALING_FACTOR = GameRuleBuilder.forDouble(1.0)
 			.minValue(0.0)
-			.buildAndRegister(id("experience_healing_factor"));
+			.buildAndRegister(id("max_experience_healing_factor"));
+
+	public static final GameRule<Double> MIN_EXPERIENCE_HEALING_FACTOR = GameRuleBuilder.forDouble(0.25)
+			.minValue(0.0)
+			.buildAndRegister(id("min_experience_healing_factor"));
+
+	public static final int MAX_ARMOR = 20;
+
+	public static float getExperienceHealingFactor(int armor, GameRules gameRules) {
+		return lerp(
+				clamp((float) armor / MAX_ARMOR, 0, 1),
+				gameRules.get(MAX_EXPERIENCE_HEALING_FACTOR).floatValue(),
+				gameRules.get(MIN_EXPERIENCE_HEALING_FACTOR).floatValue()
+		);
+	}
 
 	@Override
 	public void onInitialize() {

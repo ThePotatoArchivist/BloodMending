@@ -22,7 +22,7 @@ public class ExperienceOrbMixin {
 	private int healPlayer(ExperienceOrb instance, ServerPlayer player, int amount, Operation<Integer> original) {
 		var healthMissing = player.getMaxHealth() - player.getHealth();
 		if (healthMissing < 1) return amount;
-		double xpHealingFactor = player.level().getGameRules().get(BloodMending.EXPERIENCE_HEALING_FACTOR);
+		double xpHealingFactor = BloodMending.getExperienceHealingFactor(player.getArmorValue(), player.level().getGameRules());
 		var amountHealed = min(healthMissing, amount * (float) xpHealingFactor);
 		player.heal(amountHealed);
 		return floor(amount - amountHealed / xpHealingFactor);
